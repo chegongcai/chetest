@@ -55,9 +55,21 @@ func handleClient(conn net.Conn) {
 		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
 		str_command := string(buf[38:40])
 		fmt.Println("protocl command", str_command)
+		ParseProtocol(str_command)
 		_, err2 := conn.Write([]byte("Welcome client!"))
 		if err2 != nil {
 			return
 		}
+	}
+}
+
+func ParseProtocol(command string) {
+	switch command {
+	case "T1":
+		fmt.Println("get T1")
+		break
+	case "T3":
+		fmt.Println("get T3")
+		break
 	}
 }
