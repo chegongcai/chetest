@@ -55,33 +55,24 @@ func handleClient(conn net.Conn) {
 		rAddr := conn.RemoteAddr()
 		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
 		str_command := string(buf[38:40])
-		fmt.Println("protocl command", str_command)
-		ParseProtocol(str_command, conn)
-		/*
-			fmt.Println("send data", buf_to_client)
-			_, err2 := conn.Write(buf_to_client)
-			if err2 != nil {
-				return
-			}
-		*/
+		ParseProtocol(str_command, conn) //do protocol parse
 	}
 }
-func WriteDataToClient(data string) {
 
-}
 func ParseProtocol(command string, conn net.Conn) {
+	var buf string
 	switch command {
 	case "T1":
-		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
-		fmt.Println("get T1", buf)
+		fmt.Sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		fmt.Println(buf)
 		_, err2 := conn.Write([]byte(buf))
 		if err2 != nil {
 			return
 		}
 		break
 	case "T3":
-		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
-		fmt.Println("get T3", buf)
+		fmt.Sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d,S3", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		fmt.Println(buf)
 		_, err2 := conn.Write([]byte(buf))
 		if err2 != nil {
 			return
