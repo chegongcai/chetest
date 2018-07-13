@@ -19,7 +19,10 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"time"
 )
+
+var buf_to_client []byte
 
 func main() {
 	service := ":8080"
@@ -56,17 +59,19 @@ func handleClient(conn net.Conn) {
 		str_command := string(buf[38:40])
 		fmt.Println("protocl command", str_command)
 		ParseProtocol(str_command)
-		_, err2 := conn.Write([]byte("Welcome client!"))
+		_, err2 := conn.Write(buf_to_client)
 		if err2 != nil {
 			return
 		}
 	}
 }
+func WriteDataToClient(data string) {
 
+}
 func ParseProtocol(command string) {
 	switch command {
 	case "T1":
-		fmt.Println("get T1")
+		fmt.Sprintf(string(buf_to_client), "%04d-%02d-%02d %02d:%02d%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
 		break
 	case "T3":
 		fmt.Println("get T3")
