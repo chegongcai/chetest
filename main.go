@@ -59,10 +59,15 @@ func handleClient(conn net.Conn) {
 	}
 }
 
+func GetTimeStamp() string {
+	buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+	return buf
+}
+
 func ParseProtocol(command string, conn net.Conn) {
 	switch command {
 	case "T1":
-		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		buf := fmt.Sprintf("%s,S1,1", GetTimeStamp())
 		fmt.Println(buf)
 		_, err2 := conn.Write([]byte(buf))
 		if err2 != nil {
@@ -70,7 +75,7 @@ func ParseProtocol(command string, conn net.Conn) {
 		}
 		break
 	case "T3":
-		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S3", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		buf := fmt.Sprintf("%s,S3", GetTimeStamp())
 		fmt.Println(buf)
 		_, err2 := conn.Write([]byte(buf))
 		if err2 != nil {
