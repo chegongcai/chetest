@@ -65,22 +65,25 @@ func GetTimeStamp() string {
 }
 
 func ParseProtocol(command string, conn net.Conn) {
+	var err error
 	switch command {
+	case "T0":
+		buf := fmt.Sprintf("%s,S0", GetTimeStamp())
+		fmt.Println(buf)
+		_, err = conn.Write([]byte(buf))
+		break
 	case "T1":
 		buf := fmt.Sprintf("%s,S1,1", GetTimeStamp())
 		fmt.Println(buf)
-		_, err2 := conn.Write([]byte(buf))
-		if err2 != nil {
-			return
-		}
+		_, err = conn.Write([]byte(buf))
 		break
 	case "T3":
 		buf := fmt.Sprintf("%s,S3", GetTimeStamp())
 		fmt.Println(buf)
-		_, err2 := conn.Write([]byte(buf))
-		if err2 != nil {
-			return
-		}
+		_, err = conn.Write([]byte(buf))
 		break
+	}
+	if err != nil {
+		return
 	}
 }
