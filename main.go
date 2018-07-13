@@ -22,7 +22,7 @@ import (
 	"time"
 )
 
-var buf_to_client []byte
+var buf_to_client string
 
 func main() {
 	service := ":8080"
@@ -60,10 +60,13 @@ func handleClient(conn net.Conn) {
 		fmt.Println("protocl command", str_command)
 		ParseProtocol(str_command)
 		fmt.Println("send data", buf_to_client)
-		_, err2 := conn.Write(buf_to_client)
-		if err2 != nil {
-			return
-		}
+		/*
+			fmt.Println("send data", buf_to_client)
+			_, err2 := conn.Write(buf_to_client)
+			if err2 != nil {
+				return
+			}
+		*/
 	}
 }
 func WriteDataToClient(data string) {
