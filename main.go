@@ -55,6 +55,10 @@ func handleClient(conn net.Conn) {
 		rAddr := conn.RemoteAddr()
 		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
 		str_command := string(buf[38:40])
+		if buf[0] != '[' && buf[n-1] != ']' {
+			fmt.Println("data error!!!!!!!!!!")
+			return
+		}
 		ParseProtocol(str_command, conn) //do protocol parse
 	}
 }
