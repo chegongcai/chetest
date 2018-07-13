@@ -22,8 +22,6 @@ import (
 	"time"
 )
 
-var buf_to_client string
-
 func main() {
 	service := ":8080"
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
@@ -58,8 +56,7 @@ func handleClient(conn net.Conn) {
 		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
 		str_command := string(buf[38:40])
 		fmt.Println("protocl command", str_command)
-		ParseProtocol(str_command)
-		fmt.Println("send data", buf_to_client)
+		ParseProtocol(str_command, conn)
 		/*
 			fmt.Println("send data", buf_to_client)
 			_, err2 := conn.Write(buf_to_client)
@@ -72,15 +69,23 @@ func handleClient(conn net.Conn) {
 func WriteDataToClient(data string) {
 
 }
-func ParseProtocol(command string) {
+func ParseProtocol(command string, conn net.Conn) {
 	switch command {
 	case "T1":
-		fmt.Sprintf(string(buf_to_client), "%04d-%02d-%02d %02d:%02d%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
-		fmt.Println("get T1", buf_to_client)
+		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		fmt.Println("get T1", buf)
+		_, err2 := conn.Write([]byte(buf))
+		if err2 != nil {
+			return
+		}
 		break
 	case "T3":
-		fmt.Sprintf(string(buf_to_client), "%04d-%02d-%02d %02d:%02d%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
-		fmt.Println("get T3", buf_to_client)
+		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		fmt.Println("get T3", buf)
+		_, err2 := conn.Write([]byte(buf))
+		if err2 != nil {
+			return
+		}
 		break
 	}
 }
