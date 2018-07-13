@@ -60,10 +60,9 @@ func handleClient(conn net.Conn) {
 }
 
 func ParseProtocol(command string, conn net.Conn) {
-	var buf string
 	switch command {
 	case "T1":
-		fmt.Sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S1,1", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
 		fmt.Println(buf)
 		_, err2 := conn.Write([]byte(buf))
 		if err2 != nil {
@@ -71,7 +70,7 @@ func ParseProtocol(command string, conn net.Conn) {
 		}
 		break
 	case "T3":
-		fmt.Sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d,S3", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+		buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d,S3", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
 		fmt.Println(buf)
 		_, err2 := conn.Write([]byte(buf))
 		if err2 != nil {
