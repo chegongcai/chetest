@@ -54,6 +54,7 @@ func handleClient(conn net.Conn) {
 		rAddr := conn.RemoteAddr()
 		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
 		fmt.Println("protocl command", string(buf[38:39]))
+		fmt.Println("protocl command", string(buf[37:38]))
 		_, err2 := conn.Write([]byte("Welcome client!"))
 		if err2 != nil {
 			return
