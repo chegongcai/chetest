@@ -13,7 +13,6 @@ import (
 
 func main() {
 	service := ":8080"
-	testbuf()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -101,9 +100,6 @@ func testbuf() {
 	GetAsciiStrFromBuffer(command, buf, 6, test)
 	fmt.Println(*command)
 
-	//i := strings.Contains(*command, "BDT01")
-	//fmt.Println(i)
-
 	GetAsciiStrFromBuffer(imei, buf, 15, buf)
 	fmt.Println("get imei:", *imei)
 
@@ -113,22 +109,26 @@ func testbuf() {
 
 func ParseProtocol(rev_buf *string, conn net.Conn) {
 	var err error
-	var command, buf *string
+	var command, buf_res *string
 	var bdy int
 	command = new(string)
-	buf = new(string)
+	buf_res = new(string)
 
 	fmt.Println("Receive from client", *rev_buf)
 
-	GetAsciiStrFromBuffer(command, buf, 6, rev_buf)
+	GetAsciiStrFromBuffer(command, buf_res, 6, rev_buf)
 	fmt.Println("get command:", *command)
-	//command := "BDT01"
+
 	if strings.Contains(*command, "BDT01") == true {
 		bdy = 1
 		fmt.Println("bdy = 1")
 	}
 	switch bdy {
 	case 1:
+		var imei *string
+		imei = new(string)
+		GetAsciiStrFromBuffer(imei, buf_res, 6, buf_res)
+		fmt.Println("get imei:", *imei)
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
 		fmt.Println(buf)
