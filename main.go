@@ -13,7 +13,7 @@ import (
 
 func main() {
 	service := ":8080"
-	//testbuf()
+	testbuf()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -96,10 +96,13 @@ func testbuf() {
 	imei = new(string)
 	zone = new(string)
 
-	*test = "BDS01,20180718143213,8#"
+	*test = "BDT01,20180718143213,8#"
 
 	GetAsciiStrFromBuffer(command, buf, 6, test)
-	fmt.Println("get command:", *command)
+	fmt.Println(*command)
+
+	//i := strings.Contains(*command, "BDT01")
+	//fmt.Println(i)
 
 	GetAsciiStrFromBuffer(imei, buf, 15, buf)
 	fmt.Println("get imei:", *imei)
@@ -120,7 +123,7 @@ func ParseProtocol(rev_buf *string, conn net.Conn) {
 	GetAsciiStrFromBuffer(command, buf, 6, rev_buf)
 	fmt.Println("get command:", *command)
 	//command := "BDT01"
-	if strings.EqualFold("BDT01", *command) != false {
+	if strings.Contains(*command, "BDT01") == true {
 		bdy = 1
 		fmt.Println("bdy = 1")
 	}
