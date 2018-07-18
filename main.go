@@ -127,7 +127,7 @@ func ParseProtocol(rev_buf *string, conn net.Conn) {
 	case 1:
 		var imei *string
 		imei = new(string)
-		GetAsciiStrFromBuffer(imei, buf_res, 6, buf_res)
+		GetAsciiStrFromBuffer(imei, buf_res, 15, buf_res)
 		fmt.Println("get imei:", *imei)
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
