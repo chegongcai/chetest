@@ -10,7 +10,6 @@ import (
 
 func main() {
 	service := ":8080"
-	GetZone()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -40,9 +39,11 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
-		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
+		//fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
+		fmt.Println("client IP", rAddr.String())
+		rev_buf := string(buf[0:n])
 		str_command := string(buf[0:5])
-		ParseProtocol(str_command, conn) //do protocol parse
+		ParseProtocol(rev_buf, str_command, conn) //do protocol parse
 	}
 }
 
@@ -57,8 +58,9 @@ func GetZone() string {
 	buf := []byte(local_str)
 	return string(buf[32:33])
 }
-func ParseProtocol(command string, conn net.Conn) {
+func ParseProtocol(rev_buf string, command string, conn net.Conn) {
 	var err error
+	fmt.Println("Receive from client", rev_buf)
 	switch command {
 	case "BDT01":
 		zone, _ := strconv.Atoi(GetZone())
@@ -67,14 +69,10 @@ func ParseProtocol(command string, conn net.Conn) {
 		_, err = conn.Write([]byte(buf))
 		break
 	case "T1":
-		buf := fmt.Sprintf("%s,S1,1", GetTimeStamp())
-		fmt.Println(buf)
-		_, err = conn.Write([]byte(buf))
+
 		break
 	case "T3":
-		buf := fmt.Sprintf("%s,S3", GetTimeStamp())
-		fmt.Println(buf)
-		_, err = conn.Write([]byte(buf))
+
 		break
 	}
 	if err != nil {
