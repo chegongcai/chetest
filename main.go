@@ -105,7 +105,7 @@ func testbuf() {
 func ParseProtocol(rev_buf *string, conn net.Conn) {
 	var err error
 	var command, buf *string
-	fmt.Println("Receive from client", *rev_buf)
+	fmt.Println("Receive from client", rev_buf)
 
 	GetAsciiStrFromBuffer(command, buf, 6, rev_buf)
 	fmt.Println("get command:", *command)
