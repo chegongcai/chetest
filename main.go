@@ -1,18 +1,3 @@
-/*
-package main
-
-import (
-	_ "chetest/routers"
-
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-)
-
-func main() {
-	logs.Info("beego.Run!!!!")
-	beego.Run()
-}
-*/
 package main
 
 import (
@@ -54,25 +39,21 @@ func handleClient(conn net.Conn) {
 		}
 		rAddr := conn.RemoteAddr()
 		fmt.Println("Receive from client", rAddr.String(), string(buf[0:n]))
-		str_command := string(buf[38:40])
-		if buf[0] != '[' || buf[n-1] != ']' {
-			fmt.Println("data error!!!!!!!!!!")
-			return
-		}
+		str_command := string(buf[0:5])
 		ParseProtocol(str_command, conn) //do protocol parse
 	}
 }
 
 func GetTimeStamp() string {
-	buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+	buf := fmt.Sprintf("%04d%02d%02d%02d%02d%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
 	return buf
 }
 
 func ParseProtocol(command string, conn net.Conn) {
 	var err error
 	switch command {
-	case "T0":
-		buf := fmt.Sprintf("%s,S0", GetTimeStamp())
+	case "BDT01":
+		buf := fmt.Sprintf("BDS01,%s,8#", GetTimeStamp())
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
