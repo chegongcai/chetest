@@ -53,7 +53,8 @@ func ParseProtocol(command string, conn net.Conn) {
 	var err error
 	switch command {
 	case "BDT01":
-		buf := fmt.Sprintf("BDS01,%s,8#", GetTimeStamp())
+		Local, _ := time.LoadLocation("Local")
+		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), Local)
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
