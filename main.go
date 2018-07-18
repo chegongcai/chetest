@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
-	//	"strconv"
+	"strconv"
 	"time"
 )
 
@@ -55,14 +55,14 @@ func GetZone() string {
 	local, _ := time.LoadLocation("Local")
 	local_str := fmt.Sprintf("%s", time.Now().In(local))
 	buf := []byte(local_str)
-	fmt.Println(string(buf[32:33]))
 	return string(buf[32:33])
 }
 func ParseProtocol(command string, conn net.Conn) {
 	var err error
 	switch command {
 	case "BDT01":
-		buf := fmt.Sprintf("BDS01,%s,%s#", GetTimeStamp(), GetZone())
+		zone, _ := strconv.Atoi(GetZone())
+		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
