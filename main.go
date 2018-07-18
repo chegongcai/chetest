@@ -5,8 +5,11 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
+
+//182.254.185.142  8080
 
 func main() {
 	service := ":8080"
@@ -108,7 +111,7 @@ func testbuf() {
 func ParseProtocol(rev_buf *string, conn net.Conn) {
 	var err error
 	var command, buf *string
-
+	var bdy int
 	command = new(string)
 	buf = new(string)
 
@@ -117,17 +120,21 @@ func ParseProtocol(rev_buf *string, conn net.Conn) {
 	GetAsciiStrFromBuffer(command, buf, 6, rev_buf)
 	fmt.Println("get command:", *command)
 	//command := "BDT01"
-	switch *command {
-	case "BDT01":
+	if strings.EqualFold("BDT01", *command) != false {
+		bdy = 1
+		fmt.Println("bdy = 1")
+	}
+	switch bdy {
+	case 1:
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
-	case "T1":
+	case 2:
 
 		break
-	case "T3":
+	case 3:
 
 		break
 	}
