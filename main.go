@@ -107,13 +107,17 @@ func testbuf() {
 
 func ParseProtocol(rev_buf *string, conn net.Conn) {
 	var err error
-	//var command, buf *string
-	fmt.Println("Receive from client", rev_buf)
+	var command, buf *string
 
-	//GetAsciiStrFromBuffer(command, buf, 6, rev_buf)
-	//fmt.Println("get command:", *command)
-	command := "BDT01"
-	switch command {
+	command = new(string)
+	buf = new(string)
+
+	fmt.Println("Receive from client", *rev_buf)
+
+	GetAsciiStrFromBuffer(command, buf, 6, rev_buf)
+	fmt.Println("get command:", *command)
+	//command := "BDT01"
+	switch *command {
 	case "BDT01":
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
