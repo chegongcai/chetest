@@ -54,7 +54,7 @@ func ParseProtocol(command string, conn net.Conn) {
 	switch command {
 	case "BDT01":
 		zone, _ := time.Now().UTC().Zone()
-		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
+		buf := fmt.Sprintf("BDS01,%s,%s#", GetTimeStamp(), zone)
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
