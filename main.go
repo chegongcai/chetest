@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"net"
 	"os"
+	//	"strconv"
 	"time"
 )
 
 func main() {
 	service := ":8080"
+	GetZone()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -49,13 +51,18 @@ func GetTimeStamp() string {
 	return buf
 }
 
+func GetZone() string {
+	local, _ := time.LoadLocation("Local")
+	local_str := fmt.Sprintf("%s", time.Now().In(local))
+	buf := []byte(local_str)
+	fmt.Println(string(buf[30:31]))
+	return string(buf[30:31])
+}
 func ParseProtocol(command string, conn net.Conn) {
 	var err error
 	switch command {
 	case "BDT01":
-		local, _ := time.LoadLocation("Local")
-		//zone, _ := time.Now().UTC().Zone()
-		buf := fmt.Sprintf("BDS01,%s,%s#", GetTimeStamp(), local)
+		buf := fmt.Sprintf("BDS01,%s,%s#", GetTimeStamp(), GetZone())
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
