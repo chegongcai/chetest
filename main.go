@@ -55,8 +55,8 @@ func GetZone() string {
 	local, _ := time.LoadLocation("Local")
 	local_str := fmt.Sprintf("%s", time.Now().In(local))
 	buf := []byte(local_str)
-	fmt.Println(string(buf[30:31]))
-	return string(buf[30:31])
+	fmt.Println(string(buf[32:33]))
+	return string(buf[32:33])
 }
 func ParseProtocol(command string, conn net.Conn) {
 	var err error
