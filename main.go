@@ -175,7 +175,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		fmt.Println("serial_num:", serial_num)
 		//send data
 		buf := fmt.Sprintf("S168#%s#%s##ACK^LOCA,", imei, serial_num)
-		buf_send := fmt.Sprintf("S168#%s#%s#%d#ACK^LOCA,", imei, serial_num, len([]rune(buf))-27)
+		buf_send := fmt.Sprintf("S168#%s#%s#%04d#ACK^LOCA,", imei, serial_num, len([]rune(buf))-27)
 		fmt.Println(buf_send)
 		_, err = conn.Write([]byte(buf_send))
 		break
