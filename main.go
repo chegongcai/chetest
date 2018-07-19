@@ -118,7 +118,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		//parse data
 		latitude := DeleteTail(string(arr_buf[2]))
 		longtitude := DeleteTail(string(arr_buf[3]))
-		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[6]))
+		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[7]))
 		speed := string(arr_buf[4])
 		angle := string(arr_buf[6])
 		//printf data
