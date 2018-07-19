@@ -85,14 +85,16 @@ func ParseStatusData(str string) (signal string, sat_num string, bat string, mod
 func testbuf() {
 
 	var temp []string
-	var flag string = "123,060009080002"
-
+	var flag string = "BDT03,7,460,0,9520|3671|13,9520|3672|12,9520|3673|11,9520|3674|10,9520|3675|9,9520|3676|8,9520|3677|7"
 	temp = strings.Split(flag, ",")
-	fmt.Println(temp[1])
 
-	signal, sat_num, bat, mode := ParseStatusData(string(temp[1]))
-
-	fmt.Println(signal, sat_num, bat, mode)
+	lbs_num, _ := strconv.Atoi(string(temp[1]))
+	lbs_mnc := string(temp[2])
+	lbs_mcc := string(temp[3])
+	for i := 4; i < lbs_num+4; i++ {
+		fmt.Println(temp[i])
+	}
+	fmt.Println(lbs_num, lbs_mnc, lbs_mcc)
 }
 
 func ParseProtocol(rev_buf string, conn net.Conn) {
@@ -137,7 +139,21 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		_, err = conn.Write([]byte(buf))
 		break
 	case "BDT03":
-
+		//parse data
+		lbs_num, _ := strconv.Atoi(string(arr_buf[1]))
+		lbs_mnc := string(arr_buf[2])
+		lbs_mcc := string(arr_buf[3])
+		//printf data
+		if version == 0 {
+			fmt.Println(lbs_num, lbs_mnc, lbs_mcc)
+			for i := 4; i < lbs_num+4; i++ {
+				fmt.Println(arr_buf[i])
+			}
+		}
+		//send data
+		buf := fmt.Sprintf("BDS03#")
+		fmt.Println(buf)
+		_, err = conn.Write([]byte(buf))
 		break
 	}
 	if err != nil {
