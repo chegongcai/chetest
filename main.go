@@ -10,7 +10,7 @@ import (
 )
 
 //182.254.185.142  8080
-const version = 0
+const version = 0 // 0 for debug
 
 func main() {
 	service := ":8080"
@@ -152,6 +152,18 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		}
 		//send data
 		buf := fmt.Sprintf("BDS03#")
+		fmt.Println(buf)
+		_, err = conn.Write([]byte(buf))
+		break
+	case "BDT04":
+		//parse data
+		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[1]))
+		//printf data
+		if version == 0 {
+			fmt.Println(signal, sat_num, bat, mode)
+		}
+		//send data
+		buf := fmt.Sprintf("BDS04#")
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
