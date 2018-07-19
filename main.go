@@ -13,7 +13,6 @@ import (
 
 func main() {
 	service := ":8080"
-	//testbuf()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -65,16 +64,6 @@ func GetZone() string {
 	return string(buf[32:33])
 }
 
-func testbuf() {
-
-	var temp []string
-	var flag string = "hello,che,123,uio"
-
-	temp = strings.Split(flag, ",")
-
-	fmt.Println(temp[3])
-}
-
 func ParseProtocol(rev_buf string, conn net.Conn) {
 	var err error
 	var arr_buf []string
@@ -87,14 +76,22 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 
 	switch arr_buf[0] {
 	case "BDT01":
-		fmt.Println("get imei", arr_buf[1])
+		fmt.Println("IMEI:", arr_buf[1])
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
 	case "BDT02":
-
+		fmt.Println("time stamp:", arr_buf[1], arr_buf[5])
+		fmt.Println("latitude:", arr_buf[2])
+		fmt.Println("longtitude:", arr_buf[3])
+		fmt.Println("speed:", arr_buf[4])
+		fmt.Println("angle:", arr_buf[6])
+		fmt.Println("data:", arr_buf[7])
+		buf := fmt.Sprintf("BDS02#")
+		fmt.Println(buf)
+		_, err = conn.Write([]byte(buf))
 		break
 	case "BDT03":
 
