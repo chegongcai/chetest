@@ -13,6 +13,7 @@ import (
 
 func main() {
 	service := ":8080"
+	//testbuf()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -64,6 +65,23 @@ func GetZone() string {
 	return string(buf[32:33])
 }
 
+func DeleteTail(buf string) string {
+	lenght := len([]rune(buf))
+	data := []byte(buf)
+	str := string(data[0 : lenght-1])
+	return str
+}
+
+func testbuf() {
+
+	var temp []string
+	var flag string = "hello,che,123n,uio"
+
+	temp = strings.Split(flag, ",")
+	buf := DeleteTail(string(temp[2]))
+	fmt.Println(buf)
+}
+
 func ParseProtocol(rev_buf string, conn net.Conn) {
 	var err error
 	var arr_buf []string
@@ -83,9 +101,11 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		_, err = conn.Write([]byte(buf))
 		break
 	case "BDT02":
-		fmt.Println("time stamp:", arr_buf[1], arr_buf[5])
-		fmt.Println("latitude:", arr_buf[2])
-		fmt.Println("longtitude:", arr_buf[3])
+		fmt.Println("time stamp:%s%s", string(arr_buf[1]), string(arr_buf[5]))
+		latitude := DeleteTail(string(arr_buf[2]))
+		longtitude := DeleteTail(string(arr_buf[3]))
+		fmt.Println("latitude:", latitude)
+		fmt.Println("longtitude:", longtitude)
 		fmt.Println("speed:", arr_buf[4])
 		fmt.Println("angle:", arr_buf[6])
 		fmt.Println("data:", arr_buf[7])
