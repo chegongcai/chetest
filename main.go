@@ -84,6 +84,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 
 	switch arr_buf[0] {
 	case "BDT01":
+		fmt.Println("get imei", arr_buf[1])
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
 		fmt.Println(buf)
@@ -100,45 +101,3 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		return
 	}
 }
-
-/*
-func ParseProtocol(rev_buf *string, conn net.Conn) {
-	var err error
-	var command, buf_res *string
-	var bdy int
-
-	command = new(string)
-	buf_res = new(string)
-
-	fmt.Println("Receive from client", *rev_buf)
-
-	GetAsciiStrFromBuffer(command, buf_res, 6, rev_buf)
-	fmt.Println("get command:", *command)
-
-	if strings.Contains(*command, "BDT01") == true {
-		bdy = 1
-		fmt.Println("bdy = 1")
-	}
-	switch bdy {
-	case 1:
-		var imei *string
-		imei = new(string)
-		GetAsciiStrFromBuffer(imei, buf_res, 15, buf_res)
-		fmt.Println("get imei:", *imei)
-		zone, _ := strconv.Atoi(GetZone())
-		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
-		fmt.Println(buf)
-		_, err = conn.Write([]byte(buf))
-		break
-	case 2:
-
-		break
-	case 3:
-
-		break
-	}
-	if err != nil {
-		return
-	}
-}
-*/
