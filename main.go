@@ -10,7 +10,7 @@ import (
 )
 
 //182.254.185.142  8080
-const version = 0
+const version = 1
 
 func main() {
 	service := ":8080"
