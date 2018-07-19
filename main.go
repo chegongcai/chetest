@@ -45,8 +45,11 @@ func handleClient(conn net.Conn) {
 		}
 		rAddr := conn.RemoteAddr()
 		fmt.Println("client IP", rAddr.String())
-		rev_buf := string(buf[0:n])
-		ParseProtocol(rev_buf, conn) //do protocol parse
+		if buf[n] != '#' {
+			return
+		}
+		rev_buf := string(buf[0 : n-1]) //delete the tail #
+		ParseProtocol(rev_buf, conn)    //do protocol parse
 	}
 }
 
