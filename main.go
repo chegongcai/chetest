@@ -45,11 +45,11 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
-		fmt.Println("client IP", rAddr.String(), n, string(buf[0:n]))
+		fmt.Println("client IP", rAddr.String())
 		if buf[n-1] != '#' {
 			return
 		}
-		rev_buf := string(buf[0 : n-2]) //delete the tail #
+		rev_buf := string(buf[0 : n-1]) //delete the tail #
 		ParseProtocol(rev_buf, conn)    //do protocol parse
 	}
 }
@@ -120,7 +120,6 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		//parse data
 		latitude := DeleteTail(string(arr_buf[2]))
 		longtitude := DeleteTail(string(arr_buf[3]))
-		fmt.Println(arr_buf[7])
 		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[7]))
 		speed := string(arr_buf[4])
 		angle := string(arr_buf[6])
