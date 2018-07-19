@@ -45,7 +45,7 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
-		fmt.Println("client IP", rAddr.String())
+		fmt.Println("client IP", rAddr.String(), n, string(buf[0:n]))
 		if buf[n-1] != '#' {
 			return
 		}
