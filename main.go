@@ -13,6 +13,7 @@ import (
 
 func main() {
 	service := ":8080"
+	testbuf()
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
 	checkErr(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -87,30 +88,20 @@ func GetAsciiStrFromBuffer(StrOut1 *string, buf *string, strMaxlen int, StrIn *s
 }
 
 func testbuf() {
-	var command, test, buf, imei, zone *string
 
-	test = new(string)
-	command = new(string)
-	buf = new(string)
-	imei = new(string)
-	zone = new(string)
+	var temp []string
+	var flag string = "hello,che,123,uio"
 
-	*test = "BDT01,20180718143213,8#"
+	temp = strings.Split(flag, ",")
 
-	GetAsciiStrFromBuffer(command, buf, 6, test)
-	fmt.Println(*command)
-
-	GetAsciiStrFromBuffer(imei, buf, 15, buf)
-	fmt.Println("get imei:", *imei)
-
-	GetAsciiStrFromBuffer(zone, buf, 1, buf)
-	fmt.Println("get zone:", *zone)
+	fmt.Println(temp[3])
 }
 
 func ParseProtocol(rev_buf *string, conn net.Conn) {
 	var err error
 	var command, buf_res *string
 	var bdy int
+
 	command = new(string)
 	buf_res = new(string)
 
