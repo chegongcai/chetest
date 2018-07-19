@@ -10,6 +10,7 @@ import (
 )
 
 //182.254.185.142  8080
+const version = 0
 
 func main() {
 	service := ":8080"
@@ -65,21 +66,31 @@ func GetZone() string {
 	return string(buf[32:33])
 }
 
-func DeleteTail(buf string) string {
-	lenght := len([]rune(buf))
-	data := []byte(buf)
-	str := string(data[0 : lenght-1])
-	return str
+func DeleteTail(str string) string {
+	lenght := len([]rune(str))
+	buf := []byte(str)
+	str_out := string(buf[0 : lenght-1])
+	return str_out
+}
+
+func ParseStatusData(str string) (signal string, sat_num string, bat string, mode string) {
+	buf := []byte(str)
+	signal = string(buf[0:3])
+	sat_num = string(buf[3:6])
+	bat = string(buf[6:9])
+	mode = string(buf[10:12])
+	return signal, sat_num, bat, mode
 }
 
 func testbuf() {
 
 	var temp []string
-	var flag string = "hello,che,123n,uio"
+	var flag string = "123,060009080002"
 
 	temp = strings.Split(flag, ",")
-	buf := DeleteTail(string(temp[2]))
-	fmt.Println(buf)
+	signal, sat_num, bat, mode := ParseStatusData(string(temp[1]))
+
+	fmt.Println(signal, sat_num, bat, mode)
 }
 
 func ParseProtocol(rev_buf string, conn net.Conn) {
@@ -87,28 +98,38 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 	var arr_buf []string
 
 	fmt.Println("Receive from client", rev_buf)
-
 	arr_buf = strings.Split(rev_buf, ",")
-
 	fmt.Println(arr_buf[0])
-
 	switch arr_buf[0] {
 	case "BDT01":
-		fmt.Println("IMEI:", arr_buf[1])
+		//parse data
+		imei := string(arr_buf[1])
+		//printf data
+		if version == 0 {
+			fmt.Println("IMEI:", imei)
+		}
+		//send data
 		zone, _ := strconv.Atoi(GetZone())
 		buf := fmt.Sprintf("BDS01,%s,%d#", GetTimeStamp(), zone)
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
 	case "BDT02":
-		fmt.Println("time stamp:%s%s", string(arr_buf[1]), string(arr_buf[5]))
+		//parse data
 		latitude := DeleteTail(string(arr_buf[2]))
 		longtitude := DeleteTail(string(arr_buf[3]))
-		fmt.Println("latitude:", latitude)
-		fmt.Println("longtitude:", longtitude)
-		fmt.Println("speed:", arr_buf[4])
-		fmt.Println("angle:", arr_buf[6])
-		fmt.Println("data:", arr_buf[7])
+		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[6]))
+		speed := string(arr_buf[4])
+		angle := string(arr_buf[6])
+		//printf data
+		if version == 0 {
+			fmt.Println("latitude:", latitude)
+			fmt.Println("longtitude:", longtitude)
+			fmt.Println("speed:", speed)
+			fmt.Println("angle:", angle)
+			fmt.Println(signal, sat_num, bat, mode)
+		}
+		//send data
 		buf := fmt.Sprintf("BDS02#")
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
