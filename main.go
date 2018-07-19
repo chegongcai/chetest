@@ -45,12 +45,14 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
-		fmt.Println("client IP", rAddr.String())
-		if buf[n-1] != '#' {
-			return
-		}
-		rev_buf := string(buf[0 : n-1]) //delete the tail #
-		ParseProtocol(rev_buf, conn)    //do protocol parse
+		fmt.Println("client IP", rAddr.String(), string(buf[0:n]))
+		/*
+			if buf[n-1] != '#' {
+				return
+			}
+			rev_buf := string(buf[0 : n-1]) //delete the tail #
+			ParseProtocol(rev_buf, conn)    //do protocol parse
+		*/
 	}
 }
 
@@ -105,7 +107,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 	arr_buf = strings.Split(rev_buf, ",")
 	fmt.Println(arr_buf[0])
 	switch arr_buf[0] {
-	case "BDT01":
+	case "BDT01": //BDT01,353456789012345#
 		//parse data
 		imei := string(arr_buf[1])
 		//printf data
@@ -118,7 +120,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
-	case "BDT02":
+	case "BDT02": //BDT02,180528,22.5641N,113.2524E,000.1,061830,323.87,060009080002#
 		//parse data
 		latitude := DeleteTail(string(arr_buf[2]))
 		longtitude := DeleteTail(string(arr_buf[3]))
@@ -138,7 +140,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
-	case "BDT03":
+	case "BDT03": //BDT03,7,460,0,9520|3671|13,9520|3672|12,9520|3673|11,9520|3674|10,9520|3675|9,9520|3676|8,9520|3677|7#
 		//parse data
 		lbs_num, _ := strconv.Atoi(string(arr_buf[1]))
 		lbs_mnc := string(arr_buf[2])
@@ -155,7 +157,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 		break
-	case "BDT04":
+	case "BDT04": //BDT04,060009080002#
 		//parse data
 		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[1]))
 		//printf data
