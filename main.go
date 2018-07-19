@@ -38,7 +38,7 @@ func checkErr(err error) {
 func handleClient(conn net.Conn) {
 	defer conn.Close()
 
-	var buf [512]byte
+	var buf [1024]byte
 	for {
 		n, err := conn.Read(buf[0:])
 		if err != nil {
@@ -88,6 +88,8 @@ func testbuf() {
 	var flag string = "123,060009080002"
 
 	temp = strings.Split(flag, ",")
+	fmt.Println(temp[1])
+
 	signal, sat_num, bat, mode := ParseStatusData(string(temp[1]))
 
 	fmt.Println(signal, sat_num, bat, mode)
@@ -118,6 +120,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		//parse data
 		latitude := DeleteTail(string(arr_buf[2]))
 		longtitude := DeleteTail(string(arr_buf[3]))
+		fmt.Println(arr_buf[7])
 		signal, sat_num, bat, mode := ParseStatusData(string(arr_buf[7]))
 		speed := string(arr_buf[4])
 		angle := string(arr_buf[6])
