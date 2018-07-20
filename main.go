@@ -107,10 +107,20 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 			//fmt.Println(wifi)
 			break
 		case "G":
-
+			GPS_DATA := BDYString.GetBetweenStr(rev_buf, "GDATA", ";")
+			alert := BDYString.GetBetweenStr(rev_buf, "ALERT", ";")
+			status := BDYString.GetBetweenStr(rev_buf, "STATUS", ";")
+			fmt.Println(status)
+			fmt.Println(alert)
+			fmt.Println(GPS_DATA)
 			break
 		case "L":
-
+			LBS_DATA := BDYString.GetBetweenStr(rev_buf, "CELL", ";")
+			alert := BDYString.GetBetweenStr(rev_buf, "ALERT", ";")
+			status := BDYString.GetBetweenStr(rev_buf, "STATUS", ";")
+			fmt.Println(status)
+			fmt.Println(alert)
+			fmt.Println(LBS_DATA)
 			break
 		}
 		//printf data
