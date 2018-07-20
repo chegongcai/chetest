@@ -131,12 +131,11 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 			fmt.Println(LBS_DATA)
 			break
 		}
-		//printf data
+		//printf data  //len([]rune(buf))-27
 		//send data
-		buf := fmt.Sprintf("S168#%s#%s##ACK^LOCA,", imei, serial_num)
-		buf_send := fmt.Sprintf("S168#%s#%s#%04d#ACK^LOCA,", imei, serial_num, len([]rune(buf))-27)
-		fmt.Println(buf_send)
-		_, err = conn.Write([]byte(buf_send))
+		buf := fmt.Sprintf("S168#%s#%s#0009#ACK^LOCA,$", imei, serial_num)
+		fmt.Println(buf)
+		_, err = conn.Write([]byte(buf))
 		break
 	case "B2G":
 		//parse data
@@ -158,9 +157,8 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 	if send_test == 0 {
 		send_test = 1
 		SerialNum++
-		buf := fmt.Sprintf("S168#%s#%s##GSENSOR,1", imei, BDYString.Int2HexString(SerialNum))
-		buf_send := fmt.Sprintf("S168#%s#%s#%04d#GSENSOR,1", imei, BDYString.Int2HexString(SerialNum), len([]rune(buf))-27)
-		fmt.Println(buf_send)
-		_, err = conn.Write([]byte(buf_send))
+		buf := fmt.Sprintf("S168#%s#%s#0009#GSENSOR,1$", imei, BDYString.Int2HexString(SerialNum))
+		fmt.Println(buf)
+		_, err = conn.Write([]byte(buf))
 	}
 }
