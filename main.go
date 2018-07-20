@@ -64,6 +64,11 @@ func GetTimeStamp() string {
 	return buf
 }
 
+func GetTimeStampForSYNC() string {
+	buf := fmt.Sprintf("%04d%02d%02d%02d%02d%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+	return buf
+}
+
 func GetZone() string {
 	local, _ := time.LoadLocation("Local")
 	local_str := fmt.Sprintf("%s", time.Now().In(local))
@@ -72,21 +77,15 @@ func GetZone() string {
 }
 
 func testbuf() {
-	buf := "S168#358511029674984#0007#0013#B2G:1cc,0,247c,1300"
+	buf := "S168#358511029674984#000e#0012#SYNC:0003;CLOSED:1"
 
-	var arr_buf, data_buf, comand_buf, lbs_buf []string
+	var arr_buf, data_buf, comand_buf []string
 
 	arr_buf = strings.Split(buf, "#")                    //先分割#
 	data_buf = strings.Split(string(arr_buf[4]), ";")    //分割;
 	comand_buf = strings.Split(string(data_buf[0]), ":") //分割:
-	lbs_buf = strings.Split(string(comand_buf[1]), ",")  //分割,
 
-	flag := BDYString.HexString2Int(string(lbs_buf[0]))
-	fmt.Println(flag)
-
-	temp := 4556
-	temp_str := BDYString.Int2HexString(temp)
-	fmt.Println(temp_str)
+	fmt.Println(comand_buf[1])
 }
 
 func ParseProtocol(rev_buf string, conn net.Conn) {
@@ -153,6 +152,18 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 
 		//send data  //22.529793,113.952744
 		buf := fmt.Sprintf("S168#%s#%s#0028#ACK^B2G,22.529793,113.952744$", imei, serial_num)
+		fmt.Println("send data: ", buf)
+		_, err = conn.Write([]byte(buf))
+		break
+
+	case "SYNC":
+		////parse data
+		var buf string
+		if comand_buf[1] == "0000" {
+			buf = fmt.Sprintf("S168#%s#%s#0023#ACK^SYNC,%S$", imei, serial_num, GetTimeStampForSYNC())
+		} else {
+			buf = fmt.Sprintf("S168#%s#%s#0009#ACK^SYNC,$", imei, serial_num)
+		}
 		fmt.Println("send data: ", buf)
 		_, err = conn.Write([]byte(buf))
 		break
