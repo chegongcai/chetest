@@ -11,6 +11,8 @@ import (
 
 //182.254.185.142  8080
 const version = 0 // 0 for debug
+var SerialNum int
+var send_test int = 0
 
 func main() {
 	service := ":8080"
@@ -45,7 +47,7 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
-		fmt.Println("client IP", rAddr.String())
+		fmt.Println("client IP", rAddr.String(), string(buf[0:n]))
 		if buf[n-1] != '$' {
 			return
 		}
@@ -78,25 +80,31 @@ func testbuf() {
 
 	flag := BDYString.HexString2Int(string(lbs_buf[0]))
 	fmt.Println(flag)
+
+	temp := 4556
+	temp_str := BDYString.Int2HexString(temp)
+	fmt.Println(temp_str)
 }
 
 func ParseProtocol(rev_buf string, conn net.Conn) {
 	var err error
 	var arr_buf, data_buf, comand_buf []string
 
-	fmt.Println("Receive from client", rev_buf)
+	//fmt.Println("Receive from client", rev_buf)
 
 	arr_buf = strings.Split(rev_buf, "#")                //先分割#
 	data_buf = strings.Split(string(arr_buf[4]), ";")    //分割;
 	comand_buf = strings.Split(string(data_buf[0]), ":") //分割;
 
 	fmt.Println(comand_buf[0])
+	serial_num := string(arr_buf[2])
+	imei := string(arr_buf[1])
+
+	SerialNum = BDYString.HexString2Int(serial_num)
 
 	switch comand_buf[0] {
 	case "LOCA":
 		//parse data
-		imei := string(arr_buf[1])
-		serial_num := string(arr_buf[2])
 		switch comand_buf[1] {
 		case "W":
 			alert := BDYString.GetBetweenStr(rev_buf, "ALERT", ";")
@@ -146,5 +154,13 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 	}
 	if err != nil {
 		return
+	}
+	if send_test == 0 {
+		send_test = 1
+		SerialNum++
+		buf := fmt.Sprintf("S168#%s#%s##GSENSOR,1", imei, BDYString.Int2HexString(SerialNum))
+		buf_send := fmt.Sprintf("S168#%s#%s#%04d#GSENSOR,1", imei, BDYString.Int2HexString(SerialNum), len([]rune(buf))-27)
+		fmt.Println(buf_send)
+		_, err = conn.Write([]byte(buf_send))
 	}
 }
