@@ -67,17 +67,17 @@ func GetZone() string {
 }
 
 func testbuf() {
-	buf := "S168#358511029674984#0020#019d#LOCA:W;CELL:4,1cc,0,247c,1300,3b,247c,f49,12,247c,f47,16,247c,f48,17;GDATA:V,0,180719152738,0.000000,0.000000,0,0,0;ALERT:0080;STATUS:100,100;WIFI:12,bc-1c-81-2d-8f-64,-54,50-0f-f5-0b-fd-c1,-67,0a-9b-4b-98-51-91,-70,08-9b-4b-98-51-91,-71,0a-9b-4b-98-51-69,-71,08-9b-4b-98-51-69,-74,a8-ad-3d-f5-56-8c,-77,84-a9-c4-64-3e-22,-84,08-9b-4b-98-51-6d,-88,0a-9b-4b-98-51-6d,-88,84-a9-c4-4d-7e-e2,-88,08-9b-4b-98-51-59,-89"
-	//var arr_buf, data_buf, comand_buf, w_buf []string
+	buf := "S168#358511029674984#0007#0013#B2G:1cc,0,247c,1300"
 
-	//arr_buf = strings.Split(buf, "#")                    //先分割#
-	//data_buf = strings.Split(string(arr_buf[4]), ";")    //分割;
-	//comand_buf = strings.Split(string(data_buf[0]), ":") //分割;
+	var arr_buf, data_buf, comand_buf, lbs_buf []string
 
-	alert := BDYString.GetBetweenStr(buf, "ALERT", ";")
-	wifi := BDYString.GetBetweenStr(buf, "WIFI", "$")
-	fmt.Println(alert)
-	fmt.Println(wifi)
+	arr_buf = strings.Split(buf, "#")                    //先分割#
+	data_buf = strings.Split(string(arr_buf[4]), ";")    //分割;
+	comand_buf = strings.Split(string(data_buf[0]), ":") //分割:
+	lbs_buf = strings.Split(string(comand_buf[1]), ",")  //分割,
+
+	flag := BDYString.HexString2Int(string(lbs_buf[0]))
+	fmt.Println(flag)
 }
 
 func ParseProtocol(rev_buf string, conn net.Conn) {
@@ -101,10 +101,10 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		case "W":
 			alert := BDYString.GetBetweenStr(rev_buf, "ALERT", ";")
 			status := BDYString.GetBetweenStr(rev_buf, "STATUS", ";")
-			wifi := BDYString.GetBetweenStr(rev_buf, "WIFI", "$")
+			//wifi := BDYString.GetBetweenStr(rev_buf, "WIFI", "$")
 			fmt.Println(status)
 			fmt.Println(alert)
-			fmt.Println(wifi)
+			//fmt.Println(wifi)
 			break
 		case "G":
 
@@ -114,35 +114,24 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 			break
 		}
 		//printf data
-		fmt.Println("imei:", imei)
-		fmt.Println("serial_num:", serial_num)
 		//send data
 		buf := fmt.Sprintf("S168#%s#%s##ACK^LOCA,", imei, serial_num)
 		buf_send := fmt.Sprintf("S168#%s#%s#%04d#ACK^LOCA,", imei, serial_num, len([]rune(buf))-27)
 		fmt.Println(buf_send)
 		_, err = conn.Write([]byte(buf_send))
 		break
-	case "BDT02":
+	case "B2G":
 		//parse data
-
+		var lbs_buf []string
+		var lbs_int [4]int
+		lbs_buf = strings.Split(string(comand_buf[1]), ",") //分割;
+		for i := 0; i < 0; i++ {
+			lbs_int[i] = BDYString.HexString2Int(string(lbs_buf[i]))
+		}
+		fmt.Println(lbs_int)
 		//printf data
 
 		//send data
-		break
-	case "BDT03":
-		//parse data
-
-		//printf data
-
-		//send data
-		break
-	case "BDT04":
-		//parse data
-
-		//printf data
-
-		//send data
-
 		break
 	}
 	if err != nil {

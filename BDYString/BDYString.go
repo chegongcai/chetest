@@ -100,7 +100,17 @@ func Int2HexString(lenght int) string {
 
 //16进制字符串转10进制整形
 func HexString2Int(str string) int {
+	lenght := len([]rune(str))
 	var num [4]int
+
+	if lenght == 3 {
+		str = "0" + str
+	} else if lenght == 2 {
+		str = "00" + str
+	} else if lenght == 1 {
+		str = "000" + str
+	} else {
+	}
 	buf := []byte(str)
 	for i := 0; i < 4; i++ {
 		if string(buf[i]) == "a" {
