@@ -18,19 +18,22 @@ var SerialNum int
 var send_test int = 0
 
 func main() {
-	service := ":8080"
-	//testbuf()
-	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
-	checkErr(err)
-	listener, err := net.ListenTCP("tcp", tcpAddr)
-	checkErr(err)
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			continue
+	/*
+		service := ":8080"
+		//testbuf()
+		tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
+		checkErr(err)
+		listener, err := net.ListenTCP("tcp", tcpAddr)
+		checkErr(err)
+		beego.Run()
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				continue
+			}
+			go handleClient(conn)
 		}
-		go handleClient(conn)
-	}
+	*/
 	beego.Run()
 }
 
