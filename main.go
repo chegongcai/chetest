@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/astaxie/beego"
 )
 
 //182.254.185.142  8080
@@ -29,6 +31,7 @@ func main() {
 		}
 		go handleClient(conn)
 	}
+	beego.Run()
 }
 
 func checkErr(err error) {
