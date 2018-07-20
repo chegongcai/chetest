@@ -137,7 +137,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		//printf data  //len([]rune(buf))-27
 		//send data
 		buf := fmt.Sprintf("S168#%s#%s#0009#ACK^LOCA,$", imei, serial_num)
-		fmt.Println(buf)
+		fmt.Println("send data: ", buf)
 		_, err = conn.Write([]byte(buf))
 		break
 	case "B2G":
@@ -161,7 +161,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		send_test = 1
 		SerialNum++
 		buf := fmt.Sprintf("S168#%s#%s#0009#GSENSOR,1$", imei, BDYString.Int2HexString(SerialNum))
-		fmt.Println(buf)
+		fmt.Println("send data: ", buf)
 		_, err = conn.Write([]byte(buf))
 	}
 	fmt.Println("****************************************************************************************")
