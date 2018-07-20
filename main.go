@@ -160,7 +160,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		////parse data
 		var buf string
 		if comand_buf[1] == "0000" {
-			buf = fmt.Sprintf("S168#%s#%s#0023#ACK^SYNC,%S$", imei, serial_num, GetTimeStampForSYNC())
+			buf = fmt.Sprintf("S168#%s#%s#0023#ACK^SYNC,%s$", imei, serial_num, GetTimeStampForSYNC())
 		} else {
 			buf = fmt.Sprintf("S168#%s#%s#0009#ACK^SYNC,$", imei, serial_num)
 		}
