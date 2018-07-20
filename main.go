@@ -151,7 +151,10 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		fmt.Println(lbs_int)
 		//printf data
 
-		//send data
+		//send data  //22.529793,113.952744
+		buf := fmt.Sprintf("S168#%s#%s#0028#ACK^B2G,22.529793,113.952744$", imei, serial_num)
+		fmt.Println("send data: ", buf)
+		_, err = conn.Write([]byte(buf))
 		break
 	}
 	if err != nil {
