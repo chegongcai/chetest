@@ -47,9 +47,9 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
-		fmt.Println(rAddr.String())
-		fmt.Println(GetTimeStamp())
-		fmt.Println(string(buf[0:n]))
+		fmt.Println("client ip: ", rAddr.String())
+		fmt.Println("time: ", GetTimeStamp())
+		fmt.Println("rev data: ", string(buf[0:n]))
 		if buf[n-1] != '$' {
 			return
 		}
@@ -59,7 +59,7 @@ func handleClient(conn net.Conn) {
 }
 
 func GetTimeStamp() string {
-	buf := fmt.Sprintf("%04d%02d%02d%02d%02d%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+	buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
 	return buf
 }
 
