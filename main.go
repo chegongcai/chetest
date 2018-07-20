@@ -125,7 +125,7 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		var lbs_buf []string
 		var lbs_int [4]int
 		lbs_buf = strings.Split(string(comand_buf[1]), ",") //分割;
-		for i := 0; i < 0; i++ {
+		for i := 0; i < 4; i++ {
 			lbs_int[i] = BDYString.HexString2Int(string(lbs_buf[i]))
 		}
 		fmt.Println(lbs_int)
