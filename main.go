@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -59,21 +60,22 @@ func handleClient(conn net.Conn) {
 	}
 }
 
+func GetZone() string {
+	local, _ := time.LoadLocation("Local")
+	local_str := fmt.Sprintf("%s", time.Now().In(local))
+	buf := []byte(local_str)
+	return string(buf[32:33])
+}
+
 func GetTimeStamp() string {
 	buf := fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
 	return buf
 }
 
 func GetTimeStampForSYNC() string {
-	buf := fmt.Sprintf("%04d%02d%02d%02d%02d%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second())
+	zone, _ := strconv.Atoi(GetZone())
+	buf := fmt.Sprintf("%04d%02d%02d%02d%02d%02d", time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour()-zone, time.Now().Minute(), time.Now().Second())
 	return buf
-}
-
-func GetZone() string {
-	local, _ := time.LoadLocation("Local")
-	local_str := fmt.Sprintf("%s", time.Now().In(local))
-	buf := []byte(local_str)
-	return string(buf[32:33])
 }
 
 func testbuf() {
