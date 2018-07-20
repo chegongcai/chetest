@@ -18,6 +18,7 @@ var SerialNum int
 var send_test int = 0
 
 func main() {
+	beego.Run()
 	/*
 		service := ":8080"
 		//testbuf()
@@ -34,7 +35,6 @@ func main() {
 			go handleClient(conn)
 		}
 	*/
-	beego.Run()
 }
 
 func checkErr(err error) {
