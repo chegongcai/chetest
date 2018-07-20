@@ -8,8 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/astaxie/beego"
 )
 
 //182.254.185.142  8080
@@ -18,23 +16,20 @@ var SerialNum int
 var send_test int = 0
 
 func main() {
-	beego.Run()
-	/*
-		service := ":8080"
-		//testbuf()
-		tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
-		checkErr(err)
-		listener, err := net.ListenTCP("tcp", tcpAddr)
-		checkErr(err)
-		beego.Run()
-		for {
-			conn, err := listener.Accept()
-			if err != nil {
-				continue
-			}
-			go handleClient(conn)
+	//beego.Run()
+	service := ":8080"
+	//testbuf()
+	tcpAddr, err := net.ResolveTCPAddr("tcp4", service)
+	checkErr(err)
+	listener, err := net.ListenTCP("tcp", tcpAddr)
+	checkErr(err)
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			continue
 		}
-	*/
+		go handleClient(conn)
+	}
 }
 
 func checkErr(err error) {
