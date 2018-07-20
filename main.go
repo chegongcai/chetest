@@ -47,6 +47,7 @@ func handleClient(conn net.Conn) {
 			return
 		}
 		rAddr := conn.RemoteAddr()
+		fmt.Println("***************************************************************************************************")
 		fmt.Println("client ip: ", rAddr.String())
 		fmt.Println("time: ", GetTimeStamp())
 		fmt.Println("rev data: ", string(buf[0:n]))
@@ -163,4 +164,5 @@ func ParseProtocol(rev_buf string, conn net.Conn) {
 		fmt.Println(buf)
 		_, err = conn.Write([]byte(buf))
 	}
+	fmt.Println("***************************************************************************************************")
 }
